@@ -6,6 +6,11 @@ shopt -s extglob extquote
 # NOTE:  Todo.sh requires the .todo/config configuration file to run.
 # Place the .todo/config file in your home directory or use the -d option for a custom location.
 
+# Set script name and full path early.
+TODO_SH=$(basename "$0")
+TODO_FULL_SH="$(readlink -e "$0")"
+export TODO_SH TODO_FULL_SH
+
 [ -f VERSION-FILE ] && . VERSION-FILE || VERSION="@DEV_VERSION@"
 version() {
     cat <<-EndVersion
@@ -20,11 +25,6 @@ version() {
 	EndVersion
     exit 1
 }
-
-# Set script name and full path early.
-TODO_SH=$(basename "$0")
-TODO_FULL_SH="$0"
-export TODO_SH TODO_FULL_SH
 
 oneline_usage="$TODO_SH [-fhpantvV] [-d todo_config] action [task_number] [task_description]"
 
