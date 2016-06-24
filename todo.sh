@@ -11,7 +11,7 @@ TODO_SH=$(basename "$0")
 TODO_FULL_SH="$(readlink -e "$0")"
 export TODO_SH TODO_FULL_SH
 
-[ -f VERSION-FILE ] && . VERSION-FILE || VERSION="@DEV_VERSION@"
+[ -f ${TODO_FULL_SH%/*}/VERSION-FILE ] && . ${TODO_FULL_SH%/*}/VERSION-FILE || VERSION="@DEV_VERSION@"
 version() {
     cat <<-EndVersion
 		TODO.TXT Command Line Interface v$VERSION
