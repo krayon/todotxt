@@ -54,6 +54,7 @@ shorthelp()
 		    del|rm ITEM# [TERM]
 		    depri|dp ITEM#[, ITEM#, ITEM#, ...]
 		    do ITEM#[, ITEM#, ITEM#, ...]
+		    edit|emacs|vi|vim
 		    help [ACTION...]
 		    list|ls [TERM...]
 		    listall|lsa [TERM...]
@@ -204,6 +205,12 @@ actionsHelp()
 
 		    do ITEM#[, ITEM#, ITEM#, ...]
 		      Marks task(s) on line ITEM# as done in todo.txt.
+
+		    edit
+		    emacs
+		    vi
+		    vim
+		      Opens your todo.txt file in your \$EDITOR of choice.
 
 		    help [ACTION...]
 		      Display help about usage, options, built-in and add-on actions,
@@ -1410,6 +1417,24 @@ note: PRIORITY must be anywhere from A to Z."
     else
         echo "TODO: $deduplicateNum duplicate task(s) removed"
     fi
+    ;;
+
+"edit" | "emacs" | "vi" | "vim" )
+    if [ ! -z "${EDITOR}" ]; then #{
+        ${EDITOR} "${TODO_FILE}" && exit $?
+        echo "TODO: Falling back to generic editor list"
+    fi #}
+
+    # Try to find an editor
+    pref="${action}"
+    [ "${action}" == "edit" ] && pref="nano"
+    for e in ${pref} nano pico vim vi emacs gedit kate; do #{
+        if type -P "${e}" >/dev/null; then #{
+            exec "${e}" "${TODO_FILE}"
+        fi #}
+    done #}
+
+    echo "TODO: Cannot find an editor"
     ;;
 
 "listaddons" )
